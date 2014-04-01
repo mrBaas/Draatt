@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	>
+	
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView 
+		     android:id="@+id/list_headers"
+		     android:layout_width="match_parent"
+		     android:layout_height="wrap_content"
+		     android:background="@color/olive"
+		     android:hint="Nærmest deg nå"
+		     />
+        
+    </LinearLayout>
+	
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="8"
+        android:orientation="horizontal"
+        >
+        
+        <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        
+	        <ImageView 
+	            android:id="@+id/symbol_vaer"
+	            android:src="@drawable/vaer01d"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            />
+	        
+	        <TextView android:id="@+id/draatt_grader"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:hint="6C"
+				/>
+	        
+	    </LinearLayout>
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="4.5"
+	        android:orientation="vertical"
+	        android:gravity="center"
+	        >
+	        
+	        <TextView android:id="@+id/draatt_stedsnavn"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="18sp"
+				android:textStyle="bold"
+				android:hint="Mo i Rana"
+				/>
+	        
+	        <TextView android:id="@+id/draatt_fylkenavn"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="Nordland"
+				android:layout_gravity="center"
+				/>
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1.5"
+	        android:orientation="vertical"
+	        android:gravity="center"
+	        android:weightSum="3"
+	        >
+	        
+	        <ImageView 
+	            android:id="@+id/symbol_vind"
+	            android:src="@drawable/vindpil"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1.5"
+	            />
+	        
+	        <TextView android:id="@+id/draatt_vindstyrke"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1.5"
+				android:hint="2ms"
+				android:gravity="center"
+				/>
+	        
+	    </LinearLayout>
+        
+    </LinearLayout>
+ 
+    
+	
+</LinearLayout>
