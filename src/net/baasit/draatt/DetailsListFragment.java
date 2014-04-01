@@ -59,7 +59,9 @@ public class DetailsListFragment extends ListFragment implements AsyncResponse {
 
 	public void processFinish(List<DraattDetails> output){
 		//Receive result fired from async class of onPostExecute(result) method.
+		Log.d("Martin", "adapterdata set");
 		mAdapter.setData(output);
+		setListShown(true);
 	}
 
 	//	@Override
