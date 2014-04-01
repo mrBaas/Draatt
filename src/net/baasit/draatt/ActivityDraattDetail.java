@@ -7,6 +7,7 @@ import android.util.Log;
 
 public class ActivityDraattDetail extends FragmentActivity {
 	
+	//First commit comment.
 	String varselUrl;
 	
 	@Override
