@@ -18,6 +18,7 @@ import android.util.Log;
 public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattDetails>>{
 	
 	private static final String TAG = "DRAATT";
+	private static final String KEY_START = "tabular";
 	private static final String KEY_HEAD = "time";
 	private static final String KEY_SYMBOL = "symbol";
 	private static final String KEY_TEMPERATUR = "temperatur";
@@ -25,6 +26,7 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
 	private static final String KEY_WINDDIRECTION = "windDirection";
 	private static final String KEY_WINDSPEED = "windSpeed";
 	public AsyncResponse delegate = null;
+	boolean parseStart = false;
 
 	/*
 	public static List<DraattDetails> getDraattDetailsFromUrl() {
@@ -183,74 +185,87 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
 					int eventType = xpp.getEventType();
 					Log.d(TAG, "Steg 6");
 					// Loop through pull events until we reach END_DOCUMENT
+					
+					String tagname;
 					while (eventType != XmlPullParser.END_DOCUMENT) {
 						// Get the current tag
-						String tagname = xpp.getName();
-
-						// React to different event types appropriately
-						switch (eventType) {
-						case XmlPullParser.START_TAG:
-							if (tagname.equalsIgnoreCase(KEY_HEAD)) {
-								// If we are starting a new <site> block we need
-								//a new StackSite object to represent it
-								curDraattDetail = new DraattDetails();
-								
-								SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-								String from = xpp.getAttributeValue(null, "from");
-								String to = xpp.getAttributeValue(null, "to");
-								
-								Date fromDate = null;
-								Date toDate = null;
-								
-								try {
-									fromDate = dateFormat.parse(from);
-									toDate = dateFormat.parse(to);
-								} catch (ParseException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								
-								curDraattDetail.setFrom(fromDate);
-								curDraattDetail.setTo(toDate);
-							}
-							break;
-
-						case XmlPullParser.TEXT:
-							//grab the current text so we can use it in END_TAG event
-							curText = xpp.getText();
-							break;
-
-						case XmlPullParser.END_TAG:
-							if (tagname.equalsIgnoreCase(KEY_HEAD)) {
-								// if </time> then we are done with current Site
-								// add it to the list.
-								draattDetails.add(curDraattDetail);
-							} else if (tagname.equalsIgnoreCase(KEY_SYMBOL)) {
-								// if </symbol> use setName() on curSite
-								int symbolNumber = Integer.valueOf(xpp.getAttributeValue(null, "value"));
-								curDraattDetail.setSymbolNummer(symbolNumber);
-							} else if (tagname.equalsIgnoreCase(KEY_TEMPERATUR)) {
-								// if </temperatur> use setLink() on curSite
-								int temperaturNummer = Integer.valueOf(xpp.getAttributeValue(null, "value"));
-								curDraattDetail.setTemperatur(temperaturNummer);
-							} else if (tagname.equalsIgnoreCase(KEY_PRECIPITATION)) {
-								// if </pricipitation> use setAbout() on curSite
-								double nedborNummer = Double.valueOf(xpp.getAttributeValue(null, "value"));
-								curDraattDetail.setNedbor(nedborNummer);
-							} else if (tagname.equalsIgnoreCase(KEY_WINDDIRECTION)) {
-								// if </windDirection> use setImgUrl() on curSite
-								double vindRetning = Double.valueOf(xpp.getAttributeValue(null, "deg"));
-								curDraattDetail.setVindRetning(vindRetning);
-							}else if (tagname.equalsIgnoreCase(KEY_WINDSPEED)) {
-								// if </windDirection> use setImgUrl() on curSite
-								double vindStyrke = Double.valueOf(xpp.getAttributeValue(null, "mps"));
-								curDraattDetail.setVindStyrke(vindStyrke);
-							}
-							break;
-
-						default:
-							break;
+						tagname = xpp.getName();
+						if (tagname != null && tagname.equalsIgnoreCase(KEY_START)){
+							parseStart = true;
 						}
+						
+						if (!parseStart) {
+							//Do nothing
+						} else {
+							// React to different event types appropriately
+							switch (eventType) {
+							case XmlPullParser.START_TAG:
+								if (tagname.equalsIgnoreCase(KEY_HEAD)) {
+									// If we are starting a new <site> block we need
+									//a new StackSite object to represent it
+									curDraattDetail = new DraattDetails();
+									
+									SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+									String from = xpp.getAttributeValue(null, "from");
+									String to = xpp.getAttributeValue(null, "to");
+									
+									Date fromDate = null;
+									Date toDate = null;
+									
+									try {
+										fromDate = dateFormat.parse(from);
+										Log.d("Martin", "fromDate: "+fromDate.toString());
+										toDate = dateFormat.parse(to);
+										Log.d("Martin", "toDate: "+toDate.toString());
+									} catch (ParseException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									
+									curDraattDetail.setFrom(fromDate);
+									curDraattDetail.setTo(toDate);
+								}
+								break;
+
+							case XmlPullParser.TEXT:
+								//grab the current text so we can use it in END_TAG event
+								curText = xpp.getText();
+								break;
+
+							case XmlPullParser.END_TAG:
+								if (tagname.equalsIgnoreCase(KEY_HEAD)) {
+									// if </time> then we are done with current Site
+									// add it to the list.
+									draattDetails.add(curDraattDetail);
+								} else if (tagname.equalsIgnoreCase(KEY_SYMBOL)) {
+									// if </symbol> use setName() on curSite
+									int symbolNumber = Integer.valueOf(xpp.getAttributeValue(null, "number"));
+									curDraattDetail.setSymbolNummer(symbolNumber);
+								} else if (tagname.equalsIgnoreCase(KEY_TEMPERATUR)) {
+									// if </temperatur> use setLink() on curSite
+									int temperaturNummer = Integer.valueOf(xpp.getAttributeValue(null, "value"));
+									curDraattDetail.setTemperatur(temperaturNummer);
+								} else if (tagname.equalsIgnoreCase(KEY_PRECIPITATION)) {
+									// if </pricipitation> use setAbout() on curSite
+									double nedborNummer = Double.valueOf(xpp.getAttributeValue(null, "value"));
+									curDraattDetail.setNedbor(nedborNummer);
+								} else if (tagname.equalsIgnoreCase(KEY_WINDDIRECTION)) {
+									// if </windDirection> use setImgUrl() on curSite
+									double vindRetning = Double.valueOf(xpp.getAttributeValue(null, "deg"));
+									curDraattDetail.setVindRetning(vindRetning);
+								}else if (tagname.equalsIgnoreCase(KEY_WINDSPEED)) {
+									// if </windDirection> use setImgUrl() on curSite
+									double vindStyrke = Double.valueOf(xpp.getAttributeValue(null, "mps"));
+									curDraattDetail.setVindStyrke(vindStyrke);
+								}
+								break;
+
+							default:
+								break;
+							}
+						}
+						
+						
 						//move on to next iteration
 						eventType = xpp.next();
 					}
