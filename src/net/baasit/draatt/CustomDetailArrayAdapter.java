@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class CustomDetailArrayAdapter extends ArrayAdapter<DraattDetails> {
 
@@ -32,13 +33,13 @@ public class CustomDetailArrayAdapter extends ArrayAdapter<DraattDetails> {
 		
 		if(convertView == null) {
 			view = mInflater.inflate(R.layout.single_item_details, parent, false);
-		}else{
+		} else {
 			view = convertView;
 		}
 		
 		
 		DraattDetails item = getItem(position);
-		//((TextView)view.findViewById(R.id.xml_time)).setText(item.getFrom());
+		((TextView)view.findViewById(R.id.xml_time)).setText(item.getFrom().toString());
 		//((TextView)view.findViewById(R.id.draatt_fylkenavn)).setText(item.getFylke());
 		
 		return view;

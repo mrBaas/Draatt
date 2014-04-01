@@ -24,6 +24,7 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
 	private static final String KEY_PRECIPITATION = "precipitation";
 	private static final String KEY_WINDDIRECTION = "windDirection";
 	private static final String KEY_WINDSPEED = "windSpeed";
+	public AsyncResponse delegate = null;
 
 	/*
 	public static List<DraattDetails> getDraattDetailsFromUrl() {
@@ -137,6 +138,10 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
 	}
 	*/
 	
+	public interface AsyncResponse {
+	    void processFinish(List<DraattDetails> output);
+	}
+	
     @Override
     protected void onPreExecute() {
         // TODO Auto-generated method stub
@@ -147,7 +152,7 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
     }
     
 	@Override
-	protected List doInBackground(String... params) {
+	protected List<DraattDetails> doInBackground(String... params) {
 		
 		// Liste med DraattDetaljer som skal returneres
 				Log.d(TAG, "Steg 1");
@@ -253,9 +258,19 @@ public class DraattXmlPullParser extends AsyncTask<String, Integer, List<DraattD
 					e.printStackTrace();
 				}
 
-				// return the populated list.
-				return draattDetails;
+			// return the populated list.
+			return draattDetails;
 	}
+	
+	protected void onProgressUpdate(Integer... progress) {
+        //setProgressPercent(progress[0]);
+    }
+
+	@Override
+    protected void onPostExecute(List<DraattDetails> result) {
+		delegate.processFinish(result);
+    }
+
 
 	
 }
